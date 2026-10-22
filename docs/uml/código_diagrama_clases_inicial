@@ -1,0 +1,81 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+abstract class Vehiculo {
+    # String codigo
+    # LocalDate fechaAlta
+    # double kilometrosRecorridos
+    # String estado
+    + registrarFalla()
+}
+
+class BicicletaComun {
+    - int tamanioRodado
+}
+
+class BicicletaElectrica {
+    - double nivelBateria
+    - double autonomia
+}
+
+class MonopatinElectrico {
+    - double nivelBateria
+    - double velocidadMaxima
+}
+
+Vehiculo <|-- BicicletaComun
+Vehiculo <|-- BicicletaElectrica
+Vehiculo <|-- MonopatinElectrico
+
+class Estacion {
+    - String codigo
+    - String direccion
+    - int capacidadMaxima
+    + validarDisponibilidad()
+}
+
+Estacion "1" o-- "*" Vehiculo : contiene >
+
+class Usuario {
+    - String nombre
+    - String documento
+    - String correoElectronico
+}
+
+class Cuenta {
+    - double saldo
+    + recargar(double monto)
+    + debitar(double monto)
+}
+
+Usuario "1" *-- "1" Cuenta : tiene >
+
+class Viaje {
+    - LocalDateTime inicio
+    - LocalDateTime fin
+    - double distanciaRecorrida
+    - String estado
+    + calcularCosto()
+}
+
+Viaje "*" --> "1" Usuario : realizado por >
+Viaje "*" --> "1" Vehiculo : utiliza >
+Viaje "*" --> "1" Estacion : origen >
+Viaje "*" --> "1" Estacion : destino >
+
+class Tarifa {
+    - double cargoDesbloqueo
+    - double precioPorMinuto
+}
+
+Viaje "*" --> "1" Tarifa : aplica >
+
+class OrdenMantenimiento {
+    - LocalDate fechaApertura
+    - String tareasRealizadas
+    - LocalDate fechaCierre
+}
+
+Vehiculo "1" o-- "*" OrdenMantenimiento : requiere >
+
+@enduml
