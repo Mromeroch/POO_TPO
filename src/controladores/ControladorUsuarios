@@ -1,0 +1,107 @@
+package movilidad.controladores;
+
+import movilidad.dominio.PlanMensual;
+import movilidad.dominio.Usuario;
+import movilidad.dominio.Viaje;
+import movilidad.dominio.pagos.MedioPago;
+import movilidad.excepciones.*;
+import movilidad.persistencia.RepositorioUsuarios;
+import movilidad.persistencia.RepositorioViajes;
+import movilidad.servicios.ServicioPagosSimulado;
+import movilidad.util.Dinero;
+import movilidad.util.Reloj;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+/** Casos de uso del usuario: registro, medios de pago, recargas, plan mensual e historial (CU-01 a CU-04). */
+public class ControladorUsuarios {
+    /** S06: el precio lo define el administrador; este es un valor de referencia configurable. */
+    private BigDecimal precioPlan = Dinero.de("6000");
+
+    private final RepositorioUsuarios repoUsuarios;
+    private final RepositorioViajes repoViajes;
+    private final ServicioPagosSimulado servicioPagos;
+    private final Reloj reloj;
+
+    public ControladorUsuarios(RepositorioUsuarios repoUsuarios, RepositorioViajes repoViajes,
+                               ServicioPagosSimulado servicioPagos, Reloj reloj) {
+        this.repoUsuarios = repoUsuarios;
+        this.repoViajes = repoViajes;
+        this.servicioPagos = servicioPagos;
+        this.reloj = reloj;
+    }
+
+    /** CU-01 + S09: crea el usuario con su cuenta en $0. */
+    public Usuario registrarUsuario(String nombre, String documento, String correo) throws DatosInvalidosException {
+        if (vacio(nombre) || vacio(documento) || vacio(correo)) {
+            throw new DatosInvalidosException("Faltan datos obligatorios (nombre, documento y correo)");
+        }
+        if (repoUsuarios.existe(documento.trim())) {
+            throw new DatosInvalidosException("Ya existe un usuario registrado con el documento " + documento);
+        }
+        Usuario usuario = new Usuario(nombre.trim(), documento.trim(), correo.trim(), reloj.ahora().toLocalDate());
+        repoUsuarios.guardar(usuario);
+        return usuario;
+    }
+
+    /** CU-03: asocia una tarjeta o billetera a la cuenta. */
+    public void asociarMedioPago(String documento, MedioPago medio) throws MovilidadException {
+        Usuario u = buscarUsuario(documento);
+        if (medio == null || !medio.validar()) {
+            throw new DatosInvalidosException("Los datos del medio de pago son incorrectos");
+        }
+        u.getCuenta().asociarMedio(medio);
+        repoUsuarios.guardar(u);
+    }
+
+    /** CU-02: recarga con un medio asociado; el pago es simulado (S10). Una recarga rechazada no modifica el saldo. */
+    public void recargarSaldo(String documento, BigDecimal monto, MedioPago medio) throws MovilidadException {
+        Usuario u = buscarUsuario(documento);
+        if (monto == null || monto.signum() <= 0) {
+            throw new DatosInvalidosException("El importe de la recarga debe ser mayor a cero");
+        }
+        if (medio == null || !u.getCuenta().getMedios().contains(medio)) {
+            throw new DatosInvalidosException("El medio de pago no está asociado a la cuenta");
+        }
+        if (!servicioPagos.procesarRecarga(medio, monto)) {
+            throw new DatosInvalidosException("El medio de pago rechazó la recarga");
+        }
+        u.getCuenta().recargar(Dinero.redondear(monto), reloj.ahora());
+        u.reevaluarHabilitacion();                          // S17
+        repoUsuarios.guardar(u);
+    }
+
+    /** RF03 / S06: se debita el precio del plan al suscribirse. */
+    public PlanMensual suscribirPlan(String documento) throws MovilidadException {
+        Usuario u = buscarUsuario(documento);
+        if (!u.getCuenta().tieneSaldoMinimo(precioPlan)) {
+            throw new SaldoInsuficienteException("Saldo insuficiente para el plan mensual ($" + precioPlan + ")");
+        }
+        PlanMensual plan = new PlanMensual(reloj.ahora(), precioPlan);
+        u.suscribir(plan);
+        u.getCuenta().debitar(precioPlan, "Suscripción a plan mensual", reloj.ahora());
+        repoUsuarios.guardar(u);
+        return plan;
+    }
+
+    /** CU-04: historial ordenado por fecha (orden natural de Viaje). */
+    public List<Viaje> consultarViajes(String documento) throws MovilidadException {
+        buscarUsuario(documento);
+        List<Viaje> viajes = new ArrayList<>(repoViajes.buscarPorUsuario(documento));
+        Collections.sort(viajes);
+        return viajes;
+    }
+
+    public Usuario buscarUsuario(String documento) throws EntidadNoEncontradaException {
+        return repoUsuarios.buscarPorDocumento(documento)
+                .orElseThrow(() -> new EntidadNoEncontradaException("No existe el usuario con documento " + documento));
+    }
+
+    public BigDecimal getPrecioPlan() { return precioPlan; }
+    public void setPrecioPlan(BigDecimal precioPlan) { this.precioPlan = Dinero.redondear(precioPlan); }
+
+    private static boolean vacio(String s) { return s == null || s.trim().isEmpty(); }
+}
