@@ -1,4 +1,4 @@
-package modelo;
+package movilidad.modelo;
 
 import java.time.LocalDate;
 

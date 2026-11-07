@@ -1,15 +1,14 @@
 package movilidad.dominio;
 
 import movilidad.Escenario;
+import movilidad.excepciones.OperacionNoPermitidaException;
 import movilidad.dominio.tarifas.*;
 import movilidad.dominio.vehiculos.TipoVehiculo;
 import movilidad.excepciones.TarifaNoVigenteException;
 import movilidad.util.Dinero;
 import org.junit.jupiter.api.Test;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -119,7 +118,7 @@ class TarifasYPromocionesTest {
     @Test
     void noSePuedeTenerMasDeUnPlanVigente() throws Exception {
         esc.ana.suscribir(new PlanMensual(Escenario.HOY, Dinero.de("6000")));
-        assertThrows(movilidad.excepciones.OperacionNoPermitidaException.class,
+        assertThrows(OperacionNoPermitidaException.class,
                 () -> esc.ana.suscribir(new PlanMensual(Escenario.HOY.plusDays(1), Dinero.de("6000"))));
     }
 }

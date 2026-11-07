@@ -1,6 +1,7 @@
 package movilidad.dominio;
 
 import movilidad.dominio.mantenimiento.ReporteFalla;
+import movilidad.dominio.vehiculos.Vehiculo;
 import movilidad.dominio.vehiculos.*;
 import org.junit.jupiter.api.Test;
 
@@ -8,8 +9,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class VehiculoTest {
     private static final LocalDateTime T0 = LocalDateTime.of(2026, 11, 1, 10, 0);

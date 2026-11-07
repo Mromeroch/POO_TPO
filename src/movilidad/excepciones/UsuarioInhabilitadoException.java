@@ -1,4 +1,4 @@
-package excepciones;
+package movilidad.excepciones;
 
 public class UsuarioInhabilitadoException extends ReglaNegocioException {
     public UsuarioInhabilitadoException(String mensaje) {

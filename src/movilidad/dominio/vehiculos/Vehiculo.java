@@ -1,4 +1,4 @@
-package modelo;
+package movilidad.dominio.vehiculos;
 
 import java.time.LocalDate;
 

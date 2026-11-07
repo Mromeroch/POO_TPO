@@ -1,4 +1,4 @@
-package modelo;
+package movilidad.modelo;
 
 import java.util.ArrayList;
 import java.util.List;
