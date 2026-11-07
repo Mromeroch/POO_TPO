@@ -1,6 +1,6 @@
 package movilidad.excepciones;
 
-public class SaldoInsuficienteException extends ReglaNegocioException {
+public class SaldoInsuficienteException extends MovilidadException {
     public SaldoInsuficienteException(String mensaje){
         super(mensaje);
     }
