@@ -3,19 +3,15 @@ package movilidad.dominio.vehiculos;
 import java.time.LocalDate;
 
 public class BicicletaComun extends Vehiculo {
-    private int tamanioRodado;
+    private final int tamanioRodado;
 
     public BicicletaComun(String codigo, LocalDate fechaAlta, int tamanioRodado) {
         super(codigo, fechaAlta);
+        this.tamanioRodado = tamanioRodado;
     }
 
     @Override
-    public boolean estaDisponibleParaRetiro() {
-        return "DISPONIBLE".equalsIgnoreCase(this.estado);
-    }
+    public TipoVehiculo getTipo() { return TipoVehiculo.BICICLETA_COMUN; }
 
-    public int getTamanioRodado() {
-        return tamanioRodado;
-    }
-
+    public int getTamanioRodado() { return tamanioRodado; }
 }
