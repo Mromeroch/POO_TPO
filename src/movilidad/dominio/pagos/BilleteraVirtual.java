@@ -2,9 +2,9 @@ package movilidad.dominio.pagos;
 
 public class BilleteraVirtual implements MedioPago{
     private final String alias;
-    
+
     public BilleteraVirtual(String alias) {
-        this.alias = alias = null ? "" : alias.trim(); 
+        this.alias = alias == null ? "" : alias.trim();
     }
     
     @Override

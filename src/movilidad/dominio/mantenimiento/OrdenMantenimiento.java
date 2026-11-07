@@ -62,6 +62,11 @@ public class OrdenMantenimiento {
         this.estado = EstadoOrden.CERRADA;
     }
 
+    public void restaurarCierre(LocalDateTime fecha) {
+        this.fechaCierre = fecha;
+        this.estado = EstadoOrden.CERRADA;
+    }
+
     public boolean estaAbierta() { return estado == EstadoOrden.ABIERTA; }
 
     public long getId() { return id; }
