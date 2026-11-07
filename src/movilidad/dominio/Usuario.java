@@ -60,6 +60,15 @@ public class Usuario {
         getPlanActivo(fecha).ifPresent(PlanMensual::consumirViaje);
     }
 
+    public void restaurarEstado(boolean habilitado, int viajesFinalizados) {
+        this.habilitado = habilitado;
+        this.viajesFinalizados = viajesFinalizados;
+    }
+
+    public void restaurarPlan(PlanMensual plan) {
+        planes.add(plan);
+    }
+
     public String getNombre() { return nombre; }
     public String getDocumento() { return documento; }
     public String getCorreoElectronico() { return correoElectronico; }

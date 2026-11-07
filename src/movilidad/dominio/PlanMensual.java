@@ -40,6 +40,10 @@ public class PlanMensual {
         }
     }
 
+    public void restaurarViajesConsumidos(int viajesConsumidos) {
+        this.viajesConsumidos = viajesConsumidos;
+    }
+
     public LocalDateTime getFechaInicio() { return fechaInicio; }
     public LocalDateTime getFechaFin() { return fechaFin; }
     public BigDecimal getPrecio() { return precio; }

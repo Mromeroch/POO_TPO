@@ -39,6 +39,11 @@ public class CuentaUsuario {
         return registrar(TipoMovimiento.AJUSTE, importe, motivo, fecha);
     }
 
+    public void restaurarMovimiento(MovimientoCuenta movimiento) {
+        movimientos.add(movimiento);
+        saldo = Dinero.redondear(saldo.add(movimiento.getImporte()));
+    }
+
     public boolean tieneSaldoMinimo(BigDecimal minimo) {
         return saldo.compareTo(minimo) >= 0;
     }
