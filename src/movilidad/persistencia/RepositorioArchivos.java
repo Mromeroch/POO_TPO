@@ -366,6 +366,7 @@ public class RepositorioArchivos extends RepositorioMemoria {
             v.setPromocionAplicada(f[14].isEmpty() ? null : f[14]);
             super.guardar(v);
         }
+        restaurarContadorViajes();
     }
 
     private void leerOrdenes() throws IOException {
@@ -391,6 +392,7 @@ public class RepositorioArchivos extends RepositorioMemoria {
             }
             super.guardarOrden(o);
         }
+        restaurarContadorOrdenes();
     }
 
     private void leerTraslados() throws IOException {
