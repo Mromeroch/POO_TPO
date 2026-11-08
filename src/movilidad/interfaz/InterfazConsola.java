@@ -315,8 +315,12 @@ public class InterfazConsola {
             salida.println("No hay viajes registrados.");
         }
         for (Viaje v : lista) {
+            String devolucion = v.getEstacionDevolucion() == null ? "-" : v.getEstacionDevolucion().getCodigo();
+            String duracion = v.getFin() == null ? "-" : v.duracionMinutos() + " min";
             salida.println("  #" + v.getId() + " " + v.getInicio().format(FORMATO) + " " + v.getVehiculo().getCodigo()
-                    + " " + v.getEstado() + " $" + v.getCosto()
+                    + " " + v.getEstacionRetiro().getCodigo() + " -> " + devolucion
+                    + " | " + duracion + " | " + String.format(java.util.Locale.US, "%.2f", v.getDistanciaRecorrida()) + " km"
+                    + " | " + v.getEstado() + " $" + v.getCosto()
                     + (v.getPromocionAplicada() != null ? " (" + v.getPromocionAplicada() + ")" : ""));
         }
     }
