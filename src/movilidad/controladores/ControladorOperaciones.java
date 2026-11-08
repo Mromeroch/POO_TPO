@@ -1,5 +1,6 @@
 package movilidad.controladores;
 
+import movilidad.dominio.EstadoViaje;
 import movilidad.dominio.Estacion;
 import movilidad.dominio.Viaje;
 import movilidad.dominio.mantenimiento.AlertaEstacion;
@@ -104,6 +105,9 @@ public class ControladorOperaciones {
                 .orElseThrow(() -> new EntidadNoEncontradaException("No existe el viaje " + idViaje));
         if (importe == null || importe.signum() == 0 || motivo == null || motivo.trim().isEmpty()) {
             throw new DatosInvalidosException("El ajuste requiere un importe distinto de cero y un motivo");
+        }
+        if (viaje.getEstado() == EstadoViaje.EN_CURSO) {
+            throw new OperacionNoPermitidaException("Solo se puede ajustar un viaje cerrado");
         }
         NotaAjuste nota = new NotaAjuste(viaje, importe, motivo.trim(), operador, reloj.ahora());
         viaje.getUsuario().getCuenta().aplicarAjuste(importe, "Ajuste viaje #" + idViaje + ": " + motivo.trim(), reloj.ahora());
