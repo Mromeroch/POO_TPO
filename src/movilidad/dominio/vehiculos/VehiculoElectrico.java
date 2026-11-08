@@ -34,6 +34,7 @@ public abstract class VehiculoElectrico extends Vehiculo {
     }
 
     /** Repone la batería al 100 % y, si estaba en BATERIA_BAJA, vuelve a DISPONIBLE (S14, S20). */
+    @Override
     public void reponerBateria() {
         nivelBateria = 100.0;
         if (estado == EstadoVehiculo.BATERIA_BAJA) {
