@@ -33,6 +33,12 @@ public class Viaje implements Comparable<Viaje> {
     private String promocionAplicada;
     private LocalDateTime instanteEstacionLlena;         // S03: primer intento fallido
     private final List<PuntoRecorrido> puntos = new ArrayList<>();
+    private void exigirEnCurso() {
+        if (estado != EstadoViaje.EN_CURSO) {
+            throw new IllegalStateException("El viaje " + id + " ya está cerrado y no se puede modificar (RN15)");
+        }
+    }
+    
 
     public Viaje(long id, Usuario usuario, Vehiculo vehiculo, Estacion estacionRetiro,
                  PoliticaTarifa tarifa, LocalDateTime inicio) {
@@ -60,6 +66,7 @@ public class Viaje implements Comparable<Viaje> {
      * si no, se usa la distancia informada al devolver.
      */
     public void finalizar(Estacion estacion, LocalDateTime fin, double distanciaInformadaKm) {
+        exigirEnCurso();
         this.estacionDevolucion = estacion;
         this.fin = fin;
         this.distanciaRecorrida = puntos.size() >= 2 ? calcularDistancia() : distanciaInformadaKm;
@@ -68,12 +75,14 @@ public class Viaje implements Comparable<Viaje> {
 
     /** RN11/S12: cancelación sin cargo. */
     public void cancelar() {
+        exigirEnCurso();
         this.estado = EstadoViaje.CANCELADO;
         this.costo = Dinero.CERO;
     }
 
     /** RN13/S07. */
     public void marcarPerdido() {
+        exigirEnCurso();
         this.estado = EstadoViaje.PERDIDO;
     }
 
