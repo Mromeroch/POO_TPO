@@ -81,6 +81,13 @@ class MantenimientoOperacionesReportesTest {
 
     // ------------------------------------------------------------ operaciones
     @Test
+    void notaDeAjusteSobreViajeEnCursoSeRechaza() throws Exception {
+        Viaje v = esc.viajes.retirarVehiculo("1", "E01", "B-001");
+        assertThrows(OperacionNoPermitidaException.class,
+                () -> esc.operaciones.registrarNotaAjuste(v.getId(), Dinero.de("100"), "x", "OP-01"));
+    }
+    
+    @Test
     void redistribuirMueveVehiculosRepoeLaBateriaYRegistraLaTransferencia() throws Exception {
         esc.m001.setNivelBateria(5);                                        // BATERIA_BAJA
         esc.operaciones.redistribuir("E01", "E03", Arrays.asList("M-001", "B-001"), "OP-01");
