@@ -1,6 +1,6 @@
 package movilidad.excepciones;
 
-public class UsuarioInhabilitadoException extends MovilidadoException {
+public class UsuarioInhabilitadoException extends MovilidadException {
     public UsuarioInhabilitadoException(String mensaje) {
         super(mensaje);
     }
