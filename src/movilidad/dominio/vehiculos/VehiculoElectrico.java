@@ -33,13 +33,18 @@ public abstract class VehiculoElectrico extends Vehiculo {
         return nivelBateria < UMBRAL_BATERIA_BAJA ? EstadoVehiculo.BATERIA_BAJA : EstadoVehiculo.DISPONIBLE;
     }
 
-    /** Repone la batería al 100 % y, si estaba en BATERIA_BAJA, vuelve a DISPONIBLE (S14, S20). */
+    /**
+     * Repone la batería al 100 % y, si estaba en BATERIA_BAJA, vuelve a DISPONIBLE (S14, S20).
+     *
+     * @return
+     */
     @Override
-    public void reponerBateria() {
+    public boolean reponerBateria() {
         nivelBateria = 100.0;
         if (estado == EstadoVehiculo.BATERIA_BAJA) {
             estado = EstadoVehiculo.DISPONIBLE;
         }
+        return false;
     }
 
     /** Fija el nivel (0 a 100). Bajo el 15 % un vehículo disponible pasa a BATERIA_BAJA y no se ofrece (RN03). */

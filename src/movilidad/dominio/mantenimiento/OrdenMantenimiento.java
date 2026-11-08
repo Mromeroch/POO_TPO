@@ -54,7 +54,7 @@ public class OrdenMantenimiento {
             throw new EstacionLlenaException("La estación " + estacion.getCodigo() + " no tiene lugar para el vehículo");
         }
         estacion.ingresar(vehiculo);
-        if (vehiculo.reponerBateria();) {
+        if (vehiculo.reponerBateria()) {
             ((VehiculoElectrico) vehiculo).reponerBateria();
         }
         vehiculo.cambiarEstado(EstadoVehiculo.DISPONIBLE);
