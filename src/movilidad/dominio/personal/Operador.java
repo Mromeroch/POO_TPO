@@ -18,6 +18,6 @@ public class Operador extends Empleado {
 
     @Override
     public String getRol() {
-        return "OPERAODR";
+        return "OPERADOR";
     }
 }
