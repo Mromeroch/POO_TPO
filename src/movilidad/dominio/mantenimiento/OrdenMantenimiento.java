@@ -4,7 +4,6 @@ import movilidad.dominio.Estacion;
 import movilidad.dominio.personal.Tecnico;
 import movilidad.dominio.vehiculos.EstadoVehiculo;
 import movilidad.dominio.vehiculos.Vehiculo;
-import movilidad.dominio.vehiculos.VehiculoElectrico;
 import movilidad.excepciones.EstacionLlenaException;
 import movilidad.excepciones.OrdenIncompletaException;
 
@@ -54,9 +53,7 @@ public class OrdenMantenimiento {
             throw new EstacionLlenaException("La estación " + estacion.getCodigo() + " no tiene lugar para el vehículo");
         }
         estacion.ingresar(vehiculo);
-        if (vehiculo.reponerBateria()) {
-            ((VehiculoElectrico) vehiculo).reponerBateria();
-        }
+        vehiculo.reponerBateria();
         vehiculo.cambiarEstado(EstadoVehiculo.DISPONIBLE);
         this.fechaCierre = fecha;
         this.estado = EstadoOrden.CERRADA;

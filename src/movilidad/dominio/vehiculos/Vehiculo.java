@@ -37,8 +37,7 @@ public abstract class Vehiculo {
     /** Las bicicletas comunes no tienen batería: no hace nada. */
     protected void descontarBateria(double kilometros) {
     }
-    public boolean reponerBateria() {
-        return false;
+    public void reponerBateria() {
     }
 
     /** Al cerrar un viaje suma los kilómetros, descuenta batería (eléctricos) y resuelve el estado:
