@@ -1,6 +1,6 @@
 package movilidad.dominio.pagos;
 
-/** Medio de pago asocado a una cuenta (tarjeta o billetera virtual). Se agregan tipos nuevos sin tocar a los clientes. */
+/** Medio de pago asocaado a una cuenta (tarjeta o billetera virtual). Se agregan tipos nuevos sin tocar a los clientes. */
 public interface MedioPago {
     /** Tipo para la persistencia: TARJETA O BILLETERA. */
     String getTipo();

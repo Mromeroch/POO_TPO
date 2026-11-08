@@ -5,7 +5,7 @@ import movilidad.dominio.vehiculos.Vehiculo;
 
 import java.time.LocalDateTime;
 
-/** Operador del sistema: redistribuye y solicita las órdenas de mantenimiento (GRASP Creador). */
+/** Operador del sistema: redistribuye y solicita las ordenas de mantenimiento (GRASP Creador). */
 public class Operador extends Empleado {
     public Operador(String legajo, String nombre, String telefono) {
         super(legajo, nombre, telefono);

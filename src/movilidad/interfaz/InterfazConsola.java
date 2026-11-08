@@ -19,6 +19,7 @@ import movilidad.servicios.UsoEstacion;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.io.UncheckedIOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -216,11 +217,10 @@ public class InterfazConsola {
                             leer("Motivo"), legajo);
                     salida.println("[OK] Nota de ajuste registrada.");
                 }); break;
-                case 7: {
+                case 7: ejecutar(() -> {
                     List<Viaje> perdidos = operaciones.detectarPerdidos();
                     salida.println(perdidos.isEmpty() ? "No hay viajes perdidos." : perdidos.size() + " viaje(s) marcados como PERDIDO.");
-                    break;
-                }
+                }); break;
                 case 0: volver = true; break;
                 default: salida.println("Opción inválida.");
             }
@@ -325,14 +325,20 @@ public class InterfazConsola {
         }
     }
 
-    /** Ejecuta una acción mostrando como mensaje cualquier error de regla de negocio. */
+    /** Ejecuta una acción mostrando como mensaje cualquier error, sin tumbar el menú. */
     private void ejecutar(Accion accion) {
         try {
             accion.ejecutar();
-        } catch (MovilidadException ex) {
+        } catch (MovilidadException ex) {                 // regla de negocio violada
             salida.println("[ERROR] " + ex.getMessage());
-        } catch (IllegalArgumentException ex) {
+        } catch (FinDeEntradaException ex) {              // NO se captura: debe llegar a iniciar()
+            throw ex;
+        } catch (IllegalArgumentException ex) {           // dato mal formado (importe <= 0, etc.)
             salida.println("[ERROR] Dato inválido: " + ex.getMessage());
+        } catch (UncheckedIOException ex) {               // no se pudo leer/escribir la carpeta data
+            salida.println("[ERROR] Problema con los archivos de datos: " + ex.getMessage());
+        } catch (IllegalStateException ex) {              // estado inconsistente (ej. estación llena, viaje cerrado)
+            salida.println("[ERROR] Operación no válida: " + ex.getMessage());
         }
     }
 
