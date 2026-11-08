@@ -57,6 +57,10 @@ public class RepositorioMemoria implements RepositorioUsuarios, RepositorioVehic
 
     // ---- viajes ----
     @Override public long siguienteId() { return ++ultimoIdViaje; }
+        /** Usado por la persistencia: después de cargar, el próximo id continúa desde el mayor id existente. */
+    public void restaurarContadorViajes() {
+        ultimoIdViaje = viajes.keySet().stream().mapToLong(Long::longValue).max().orElse(0);
+    }
     @Override public void guardar(Viaje v) { viajes.put(v.getId(), v); }
     @Override public Optional<Viaje> buscarPorId(long id) { return Optional.ofNullable(viajes.get(id)); }
     @Override public List<Viaje> buscarViajes() { return new ArrayList<>(viajes.values()); }
@@ -69,6 +73,11 @@ public class RepositorioMemoria implements RepositorioUsuarios, RepositorioVehic
 
     // ---- mantenimiento ----
     @Override public long siguienteIdOrden() { return ++ultimoIdOrden; }
+        /** Usado por la persistencia: después de cargar, el próximo id continúa desde el mayor id existente. */
+    public void restaurarContadorOrdenes() {
+        ultimoIdOrden = ordenes.keySet().stream().mapToLong(Long::longValue).max().orElse(0);
+    }
+        
     @Override public void guardarOrden(OrdenMantenimiento o) { ordenes.put(o.getId(), o); }
     @Override public Optional<OrdenMantenimiento> buscarOrdenPorId(long id) { return Optional.ofNullable(ordenes.get(id)); }
     @Override public List<OrdenMantenimiento> buscarOrdenes() { return new ArrayList<>(ordenes.values()); }
@@ -86,4 +95,6 @@ public class RepositorioMemoria implements RepositorioUsuarios, RepositorioVehic
     @Override public void guardar(Empleado e) { personal.put(e.getLegajo(), e); }
     @Override public Optional<Empleado> buscarEmpleado(String legajo) { return Optional.ofNullable(personal.get(legajo)); }
     @Override public List<Empleado> buscarEmpleados() { return new ArrayList<>(personal.values()); }
+    
+
 }
